@@ -1,0 +1,19 @@
+[package]
+name = "aethernet-pqc-sdk"
+version = "0.1.1"
+edition = "2024"
+description = "FIPS-204 ML-DSA Execution Edge for the AetherNet Protocol"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/kronova-intelligent-systems/aethernet-pqc-core"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+crystals-dilithium = "2.0.0" 
+# 🛡️ THE FIX: Inject the JS entropy bridge specifically for v0.2
+getrandom = { version = "0.2", features = ["js"] }
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

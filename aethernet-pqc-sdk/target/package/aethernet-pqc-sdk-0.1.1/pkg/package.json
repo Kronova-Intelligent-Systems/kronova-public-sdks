@@ -1,0 +1,11 @@
+{
+  "name": "@kronova-intelligent-systems/aethernet-pqc-sdk",
+  "version": "0.1.1",
+  "files": [
+    "aethernet_pqc_sdk_bg.wasm",
+    "aethernet_pqc_sdk.js",
+    "aethernet_pqc_sdk.d.ts"
+  ],
+  "main": "aethernet_pqc_sdk.js",
+  "types": "aethernet_pqc_sdk.d.ts"
+}
