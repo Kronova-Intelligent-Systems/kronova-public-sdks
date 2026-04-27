@@ -26,7 +26,6 @@ export default defineConfig({
   // into your SDK code. This is CRITICAL for C/C++ or WebAssembly backed crypto libraries.
   external: [
     'crystals-kyber',
-    'crystals-dilithium',
     'dilithium-crystals-js', // 🛡️ Added the exact name from the error
     '@supabase/supabase-js',
     'jose',

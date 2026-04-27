@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from 'jose';
 
 import * as kyber from 'crystals-kyber';
-import * as dilithium from 'crystals-dilithium';
+import * as dilithium from 'dilithium-crystals-js';
 import * as crypto from 'crypto';
 
 export interface PqcKeys {
