@@ -129,24 +129,17 @@ interface EncryptedEnvelope {
     authTag: string;
 }
 declare class CryptoEngine {
-    private keys;
+    private keys?;
     constructor(keys?: PqcKeys);
-    getPublicKeys(): {
-        dilithium: string;
-        kyber: string;
-    };
     /**
-     * ML-DSA (Dilithium) Mode-3 Signature for AP2 Mandates
+     * ML-DSA (Dilithium) Mode-3 Signature
      */
-    sign(payload: any): string;
+    sign(payload: any): Promise<string>;
     /**
-     * ML-KEM (Kyber1024) + AES-256-GCM Hybrid Encryption for AetherNet Payload
+     * ML-KEM (Kyber1024) + AES-256-GCM Hybrid Encryption
+     * 🛡️ Fully Asynchronous Real Math Implementation
      */
-    encrypt(payload: any, recipientKyberPubB64: string): EncryptedEnvelope;
-    /**
-     * Decrypt incoming AetherNet Envelope using own Kyber Private Key
-     */
-    decrypt(envelope: EncryptedEnvelope): any;
+    encrypt(payload: any, recipientKyberPubB64: string): Promise<EncryptedEnvelope>;
 }
 
 interface TransportMessage {

@@ -25,7 +25,7 @@ export class AP2Wallet {
     };
 
     // 5. Sign the payload (CryptoEngine handles the deterministic JSON stringification)
-    paymentData.agent_signature = this.crypto.sign(paymentData);
+    paymentData.agent_signature = await this.crypto.sign(paymentData);
 
     // 6. Enterprise Safety Check: Run the final constructed object through the Zod validator
     // This guarantees the payload exactly matches what the Rust TEE and Canton smart contracts expect.
@@ -35,7 +35,7 @@ export class AP2Wallet {
     return this.transport.sendMessage({
       recipient_did: "SETTLEMENT_GATEWAY", // The target node DID
       metadata: { payload_type: 'ap2_mandate', mandate_step: 'payment' },
-      payload: this.crypto.encrypt(validatedPayment, "YOUR_GATEWAY_KYBER_PUBLIC_KEY")
+      payload: await this.crypto.encrypt(validatedPayment, "YOUR_GATEWAY_KYBER_PUBLIC_KEY")
     });
   }
 }

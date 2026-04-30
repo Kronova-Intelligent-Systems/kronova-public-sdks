@@ -49,7 +49,7 @@ export class AetherTransport {
     const signaturePayload = `${method}:${path}:${timestamp}:${JSON.stringify(body, Object.keys(body).sort())}`;
     
     // Sign the HTTP intent with the Agent's ML-DSA (Dilithium) Private Key
-    const signature = this.crypto.sign(signaturePayload);
+    const signature = await this.crypto.sign(signaturePayload);
 
     // Dispatch with Post-Quantum Signed Headers
     const response = await fetch(`${this.baseUrl}${path}`, {

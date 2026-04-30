@@ -25,7 +25,7 @@ export default defineConfig({
   // Marks these specific node_modules as external so they aren't bundled directly 
   // into your SDK code. This is CRITICAL for C/C++ or WebAssembly backed crypto libraries.
   external: [
-    'crystals-kyber',
+    'crystals-kyber-js',
     'dilithium-crystals-js', // 🛡️ Added the exact name from the error
     '@supabase/supabase-js',
     'jose',
