@@ -171,4 +171,29 @@ declare class AP2Wallet {
     pay(cart: AP2Cart): Promise<any>;
 }
 
-export { AP2CartSchema, AP2IntentSchema, AP2PaymentSchema, AP2Wallet, AetherNetClient, AetherTransport, CryptoEngine };
+interface SmartFhirClaims {
+    iss: string;
+    sub: string;
+    aud: string;
+    exp: number;
+    iat: number;
+    jti: string;
+    scope: string;
+    patient?: string;
+    kronova_did?: string;
+}
+declare class KronovaSmartAuth {
+    private crypto;
+    private issuerUrl;
+    constructor(crypto: CryptoEngine, issuerUrl: string);
+    /**
+     * Generates a Post-Quantum JSON Web Token (PQ-JWT) for FHIR Authorization
+     */
+    issueAccessToken(claims: Omit<SmartFhirClaims, 'iss' | 'iat' | 'jti'>): Promise<string>;
+    /**
+     * Verifies an incoming SMART on FHIR PQ-JWT at the Resource Server Edge
+     */
+    verifyAccessToken(token: string, requiredAudience: string): Promise<SmartFhirClaims>;
+}
+
+export { AP2CartSchema, AP2IntentSchema, AP2PaymentSchema, AP2Wallet, AetherNetClient, AetherTransport, CryptoEngine, KronovaSmartAuth, type SmartFhirClaims };
