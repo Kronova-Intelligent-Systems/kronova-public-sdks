@@ -130,13 +130,25 @@ interface EncryptedEnvelope {
 }
 declare class CryptoEngine {
     private keys?;
+    private wasmModule;
     constructor(keys?: PqcKeys);
     /**
-     * ML-DSA (Dilithium) Mode-3 Signature
+     * 🛡️ Dynamically load the Kronova Native WASM Module
+     * Bypasses the initial bundle size penalty and ensures 1:1 Rust TEE parity.
+     */
+    private getWasm;
+    /**
+     * ML-DSA (Dilithium3 / FIPS-204) Signature Generation
+     * Executed via natively compiled Rust WebAssembly.
      */
     sign(payload: any): Promise<string>;
     /**
-     * ML-KEM (Kyber1024) + AES-256-GCM Hybrid Encryption
+     * ML-DSA (Dilithium3 / FIPS-204) Signature Verification
+     * Required for SMART on FHIR PQ-JWT authentication.
+     */
+    verify(payload: any, signatureB64: string, providedPubKey?: Buffer): Promise<boolean>;
+    /**
+     * ML-KEM (Kyber1024 / FIPS-203) + AES-256-GCM Hybrid Encryption
      * 🛡️ Fully Asynchronous Real Math Implementation
      */
     encrypt(payload: any, recipientKyberPubB64: string): Promise<EncryptedEnvelope>;
