@@ -2,19 +2,20 @@
 
 [![NPM Version](https://img.shields.io/npm/v/@kronova-intelligent-systems/aethernet-pqc-sdk.svg)](https://www.npmjs.com/package/@kronova-intelligent-systems/aethernet-pqc-sdk)
 [![Crates.io](https://img.shields.io/crates/v/aethernet-pqc-sdk.svg)](https://crates.io/crates/aethernet-pqc-sdk)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-The official Post-Quantum Cryptography (PQC) execution engine for the **AetherNet Protocol**. 
+The official Post-Quantum Cryptography (PQC) execution engine for the **AetherNet Protocol**.
 
-This SDK provides a unified, FIPS-204 compliant implementation of the ML-DSA (Dilithium3) digital signature algorithm. It is engineered for autonomous AI agents, Trusted Execution Environments (TEEs), and highly secure enterprise gateways operating on the AetherNet network.
+This SDK provides a unified, **NIST FIPS-204** compliant implementation of the **ML-DSA-65** (formerly CRYSTALS-Dilithium3) digital signature algorithm. It is engineered for autonomous AI agents, Trusted Execution Environments (TEEs), and enterprise gateways operating on the AetherNet network.
 
-Built natively in pure Rust for bare-metal performance, and compiled to highly optimized WebAssembly (WASM) for universal compatibility across Node.js, Edge runtimes, and the browser.
+Built natively in pure Rust for bare-metal performance, and compiled to optimized WebAssembly (WASM) for universal compatibility across Node.js, Edge runtimes, and the browser.
 
 ## Architecture
 
-AetherNet PQC SDK solves the "Cross-Crate Cryptographic Drift" problem by providing a single mathematical source of truth across the entire tech stack:
+AetherNet PQC SDK eliminates "Cross-Crate Cryptographic Drift" by providing a single mathematical source of truth across the entire tech stack:
+
 * **Backend (Rust):** Natively importable via `crates.io` for high-frequency trading matching engines, HSMs, and hardware enclaves.
-* **Frontend/Edge (NPM):** Importable as a WASM module for Next.js Server Actions, Express Gateways, and React clients.
+* **Frontend / Edge (NPM):** Importable as a WASM module for Next.js Server Actions, Express Gateways, and React clients.
 
 ## Installation
 
@@ -27,7 +28,7 @@ npm install @kronova-intelligent-systems/aethernet-pqc-sdk
 ```Ini, TOML
 
 [dependencies]
-aethernet-pqc-sdk = "0.1.0"
+aethernet-pqc-sdk = "0.2.2"
 ```
 
 Quick Start (TypeScript / Node.js)
@@ -38,33 +39,35 @@ Quick Start (TypeScript / Node.js)
 
 import { generate_pqc_keypair } from '@kronova-intelligent-systems/aethernet-pqc-sdk';
 
-// Generates a FIPS-204 ML-DSA keypair
+// Generates a finalized NIST FIPS-204 ML-DSA-65 keypair
 const keys = generate_pqc_keypair();
 console.log("Public Key (Base64):", keys.public_key_b64);
 console.log("Private Key (Base64):", keys.private_key_b64);
 ```
+
 2. Sign an Enterprise AP2 Payload
 ```TypeScript
 import { sign_pqc_payload } from '@kronova-intelligent-systems/aethernet-pqc-sdk';
 
-const payload = Buffer.from(JSON.stringify({ 
-  intent_ref: "WORKFLOW-123", 
-  amount: 5000 
-}), 'utf-8');
-
+const payloadBuffer = Buffer.from(
+  JSON.stringify({ intent_ref: "WORKFLOW-123", amount: 5000 }),
+  'utf-8'
+);
 const privateKeyBuffer = Buffer.from(keys.private_key_b64, 'base64');
 
-// Generates a detached 3309-byte ML-DSA signature
-const signature = sign_pqc_payload(payload, privateKeyBuffer);
-console.log("Signature Generated.");
+// Generates a detached 3,309-byte FIPS-204 ML-DSA-65 signature (Uint8Array)
+const signatureBytes = sign_pqc_payload(payloadBuffer, privateKeyBuffer);
+console.log("Signature Generated (bytes):", signatureBytes.length);
 ```
 3. Verify a Signature at the Edge
 ```TypeScript
 import { verify_pqc_signature } from '@kronova-intelligent-systems/aethernet-pqc-sdk';
 
+const publicKeyBuffer = Buffer.from(keys.public_key_b64, 'base64');
+
 const isValid = verify_pqc_signature(
-  signatureBuffer, 
-  payloadBuffer, 
+  signatureBytes,
+  payloadBuffer,
   publicKeyBuffer
 );
 
@@ -74,12 +77,15 @@ if (isValid) {
   console.error("❌ Cryptographic Airgap Violation");
 }
 ```
+
 ### Protocol Specifications
 - Standard: NIST FIPS-204 (ML-DSA)
 
-- Parameter Set: Dilithium3 (ML-DSA-65)
+- Parameter Set: ML-DSA-65 (CRYSTALS-Dilithium3)
 
 - Public Key Length: 1952 bytes
+
+- Private Key Length: 4032 bytes
 
 - Signature Length: 3309 bytes
 
